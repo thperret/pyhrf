@@ -11,8 +11,8 @@ This page is just to get started, visit `wiki <https://github.com/pyhrf/pyhrf/wi
 Submitting tickets
 ==================
 
-    - We are talking about tickets for this projects.
-    - Describe your problem
+- We are talking about tickets for this projects.
+- Describe your problem
 
 Pull requests
 =============
@@ -22,12 +22,12 @@ To contribute to code or documentation, fork the project on GitHub and submit pu
 Commit messages
 ***************
 
-    - Use the present tense ("Add feature" not "Added feature")
-    - Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
-    - Reference ticket(s)
+- Use the present tense ("Add feature" not "Added feature")
+- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+- Reference ticket(s)
 
 Documentation
 *************
 
-    - Use `sphinx <http://sphinx-doc.org/>`_
-    - Use `reStructuredText <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
+- Use `sphinx <http://sphinx-doc.org/>`_
+- Use `reStructuredText <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_
