@@ -10,8 +10,8 @@ language: python
 python:
     - 2.7
 env:
-    - FULL-DEPS=false
-    - FULL-DEPS=true
+    - FULLDEPS=false
+    - FULLDEPS=true
 #use this to make PyQt4 importable
 #virtualenv:
 #    system_site_packages: true
@@ -25,7 +25,7 @@ before_install:
     - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis "nibabel>=1.1"
     - pip install sympy
     - pip install nipy
-    - if [ "$FULL-DEPS" ]; then
+    - if [ "$FULLDEPS" = true ]; then
         pip install "scikit-learn>=0.10";
         pip install "joblib>=0.5";
         pip install "Pillow>=2.3";
