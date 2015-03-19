@@ -19,7 +19,7 @@ env:
 before_install:
     - sudo apt-get install -qq libatlas-dev libatlas-base-dev gfortran libpng-dev
     - if [ "$FULLDEPS" = true ]; then
-        sudo apt-get install graphviz;
+      sudo apt-get install -qq graphviz;
       fi
 #    - sudo apt-get install -qq python-qt4 
     - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis "numpy>=1.6"
