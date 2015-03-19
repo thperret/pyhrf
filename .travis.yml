@@ -26,11 +26,11 @@ before_install:
     - pip install sympy
     - pip install nipy
     - if [ "$FULL-DEPS" ]; then
-        pip install "scikit-learn>=0.10"
-        pip install "joblib>=0.5"
-        pip install "Pillow>=2.3"
-        pip install "munkres>=1.0"
-        pip install "pygraphviz>=1.1"
+        pip install "scikit-learn>=0.10";
+        pip install "joblib>=0.5";
+        pip install "Pillow>=2.3";
+        pip install "munkres>=1.0";
+        pip install "pygraphviz>=1.1";
     - pip install coverage
     - pip install coveralls
     # set non-interactive matplotlib backend to avoid issues related to $DISPLAY
