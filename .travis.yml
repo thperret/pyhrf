@@ -9,7 +9,9 @@
 language: python
 python:
     - 2.7
-
+env:
+    - FULL-DEPS=false
+    - FULL-DEPS=true
 #use this to make PyQt4 importable
 #virtualenv:
 #    system_site_packages: true
@@ -17,14 +19,18 @@ python:
 before_install:
     - sudo apt-get install -qq libatlas-dev libatlas-base-dev gfortran libpng-dev
 #    - sudo apt-get install -qq python-qt4 
-    - pip install --no-index -f http://wheels2.astropy.org -f https://nipy.bic.berkeley.edu/scipy_installers/travis scipy "matplotlib<1.4";
-    - pip install nibabel
+    - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis "numpy>=1.6"
+    - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis "scipy>=0.9"
+    - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis "matplotlib<1.4"
+    - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis "nibabel>=1.1"
     - pip install sympy
     - pip install nipy
-    - pip install joblib
-    - pip install scikit-learn
-    - pip install munkres
-    - pip install Pillow
+    - if [ "$FULL-DEPS" ]; then
+        pip install "scikit-learn>=0.10"
+        pip install "joblib>=0.5"
+        pip install "Pillow>=2.3"
+        pip install "munkres>=1.0"
+        pip install "pygraphviz>=1.1"
     - pip install coverage
     - pip install coveralls
     # set non-interactive matplotlib backend to avoid issues related to $DISPLAY
