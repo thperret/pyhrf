@@ -31,6 +31,7 @@ before_install:
         pip install "Pillow>=2.3";
         pip install "munkres>=1.0";
         pip install "pygraphviz>=1.1";
+      fi
     - pip install coverage
     - pip install coveralls
     # set non-interactive matplotlib backend to avoid issues related to $DISPLAY
