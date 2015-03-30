@@ -45,7 +45,6 @@ class BetaEstimESTest(unittest.TestCase):
         nbClasses = 2
         labels = genPotts(g, beta, nbClasses)
         # partition function estimation
-        np.seterr('raise')
         gridLnz = Cpt_Vec_Estim_lnZ_Graph(g, nbClasses)
         gridPace = gridLnz[1][1] - gridLnz[1][0]
         # beta estimation
