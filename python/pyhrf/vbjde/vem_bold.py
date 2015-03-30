@@ -35,7 +35,14 @@ logger = logging.getLogger(__name__)
 eps = 1e-4
 
 
-def Main_vbjde_Extension(graph, Y, Onsets, Thrf, K, TR, beta, dt, scale=1, estimateSigmaH=True, sigmaH=0.05, NitMax=-1, NitMin=1, estimateBeta=True, PLOT=False, contrasts=[], computeContrast=False, gamma_h=0, estimateHRF=True, TrueHrfFlag=False, HrfFilename='hrf.nii', estimateLabels=True, LabelsFilename='labels.nii', MFapprox=False, InitVar=0.5, InitMean=2.0, MiniVEMFlag=False, NbItMiniVem=5):
+def Main_vbjde_Extension(graph, Y, Onsets, Thrf, K, TR, beta, dt, scale=1,
+                         estimateSigmaH=True, sigmaH=0.05, NitMax=-1, NitMin=1,
+                         estimateBeta=True, PLOT=False, contrasts=[],
+                         computeContrast=False, gamma_h=0, estimateHRF=True,
+                         TrueHrfFlag=False, HrfFilename='hrf.nii',
+                         estimateLabels=True, LabelsFilename='labels.nii',
+                         MFapprox=False, InitVar=0.5, InitMean=2.0,
+                         MiniVEMFlag=False, NbItMiniVem=5):
     # VEM BOLD classic, using extension in C
 
     logger.info("Fast EM with C extension started ...")

@@ -109,6 +109,7 @@ class FMRIAnalyser(xmlio.XmlInitable):
                 del sio
                 logger.error(report)
                 res = None
+                raise Exception('which test failed???')
         else:
             res = self.analyse_roi(roiData)
 

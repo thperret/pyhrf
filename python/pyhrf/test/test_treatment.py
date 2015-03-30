@@ -88,8 +88,8 @@ class TreatmentTest(unittest.TestCase):
         t.enable_draft_testing()
         t.run()
 
-    @unittest.skipIf(not tools.is_importable('joblib'),
-                     'joblib (optional dep) is N/A')
+    @unittest.skipUnless(tools.is_importable('joblib'),
+                         'joblib (optional dep) is N/A')
     def test_parallel_local(self):
 
         t = ptr.FMRITreatment(make_outputs=False, result_dump_file=None)
