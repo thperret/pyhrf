@@ -8,6 +8,12 @@ import numpy as np
 from pyhrf.ui.treatment import FMRITreatment
 from pyhrf.ui.jde import JDEMCMCAnalyser
 
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
+
 
 logger = logging.getLogger(__name__)
 

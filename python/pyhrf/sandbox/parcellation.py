@@ -12,6 +12,7 @@ Modified: Aina Frau
 License: BSD 3 clause
 """
 
+import os
 import warnings
 import logging
 
@@ -47,6 +48,12 @@ except ImportError:
     # everything) in the case of minimal requirements (without scikit-learn)
     # TODO: find a better way of handling this case (or make sklearn a required
     # dependency)
+
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 import pyhrf
 

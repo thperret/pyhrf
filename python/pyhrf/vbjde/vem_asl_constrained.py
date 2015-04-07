@@ -7,6 +7,7 @@ and l2-norm=1 constraints.
 It imports functions from vem_tools.py in pyhrf/vbjde
 """
 
+import os
 import time
 import copy
 import logging
@@ -19,6 +20,12 @@ import pyhrf.vbjde.vem_tools as vt
 import pyhrf.vbjde.vem_tools_asl as EM
 
 from pyhrf.boldsynth.hrf import getCanoHRF
+
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 
 logger = logging.getLogger(__name__)

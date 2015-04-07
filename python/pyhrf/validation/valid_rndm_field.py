@@ -13,6 +13,12 @@ from pyhrf.tools import montecarlo
 from pyhrf.validation import config
 from pyhrf.validation.config import figfn
 
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
+
 
 class field_energy_calculator:
     def __init__(self, graph):

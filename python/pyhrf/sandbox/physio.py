@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import os
 import os.path as op
 import numpy as np
 
@@ -7,6 +9,12 @@ from pyhrf.paradigm import Paradigm
 from pyhrf.tools import Pipeline
 
 import pyhrf.boldsynth.scenarios as simbase
+
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 PHY_PARAMS_FRISTON00 = {
     'model_name' : 'Friston00',
@@ -117,7 +125,7 @@ def phy_integrate_euler(phy_params, tstep, stim, epsilon, Y0=None):
     TODO: should the output signals be rescaled wrt their value at rest?
     """
 
-    epsilon = phy_params['eps']   #WARNING!! Added to compute figures 
+    epsilon = phy_params['eps']   #WARNING!! Added to compute figures
     tau_s = phy_params['tau_s']
     tau_f = phy_params['tau_f']
     tau_m = phy_params['tau_m']

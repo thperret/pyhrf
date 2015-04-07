@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import os.path as op
 import unittest
 import shutil
@@ -23,6 +24,12 @@ from pyhrf.tools import Pipeline
 from pyhrf.core import FmriData
 from pyhrf.parcellation import parcellation_dist
 from pyhrf.sandbox.parcellation import loglikelihood_computation
+
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 # launch all the tests in here:
 #  pyhrf_maketests -v test_sandbox_parcellation

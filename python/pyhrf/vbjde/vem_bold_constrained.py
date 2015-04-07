@@ -7,6 +7,7 @@ and l2-norm=1 constraints.
 It imports functions from vem_tools.py in pyhrf/vbjde
 """
 
+import os
 import time
 import logging
 
@@ -22,6 +23,12 @@ try:
     from collections import OrderedDict
 except ImportError:
     from pyhrf.tools.backports import OrderedDict
+
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 
 logger = logging.getLogger(__name__)

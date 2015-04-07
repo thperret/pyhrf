@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import os, sys
+
+import os
+import sys
 import unittest
 import numpy as np
 
@@ -16,18 +18,25 @@ from pyhrf.validation.config import figfn
 from pyhrf.boldsynth.pottsfield.swendsenwang import *
 from pyhrf.ndarray import stack_cuboids
 
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
+
+
 def dist(x,y):
     return ((x-y)**2).sum()**.5
 
 
-def beta_estim_obs_field_mc(graph, nbClasses, beta, gridLnz, mcit=1, 
+def beta_estim_obs_field_mc(graph, nbClasses, beta, gridLnz, mcit=1,
                             cachePotts=False):
 
     cumulBetaEstim = 0.
     cumul2BetaEstim = 0.
 
     for mci in xrange(mcit):
-        labels = cached_eval(genPotts, (graph, beta, nbClasses), 
+        labels = cached_eval(genPotts, (graph, beta, nbClasses),
                              save=cachePotts, new=(not cachePotts))
         print 'labels:',labels
         betaEstim, _ = beta_estim_obs_field(graph, labels, gridLnz,
@@ -44,7 +53,7 @@ def beta_estim_obs_field_mc(graph, nbClasses, beta, gridLnz, mcit=1,
     return meanBetaEstim, stdBetaEstim
 
 def test_beta_estim_obs_fields(graphs, betas, nbLabels, pfmethod, mcit=1):
-    
+
     nbGraphs = len(graphs)
     meanBetaEstims = np.zeros(len(betas))
     stdBetaEstims = np.zeros(len(betas))
@@ -54,7 +63,7 @@ def test_beta_estim_obs_fields(graphs, betas, nbLabels, pfmethod, mcit=1):
         cachePotts = True
     else:
         cachePotts = False
-        
+
     # compute partition functions:
     print 'compute partition functions ... nbgraphs:', nbGraphs
     print 'Method =', pfmethod
@@ -63,7 +72,7 @@ def test_beta_estim_obs_fields(graphs, betas, nbLabels, pfmethod, mcit=1):
         for ig, g in enumerate(graphs):
             grid = cached_eval(Cpt_Vec_Estim_lnZ_Graph_fast3, (g,nbLabels),
                                path=config.cacheDir, prefix='pyhrf_')
-            gridLnz[ig] = (grid[0][:-1], grid[1][:-1])    
+            gridLnz[ig] = (grid[0][:-1], grid[1][:-1])
     elif pfmethod == 'PS':
         for ig, g in enumerate(graphs):
             gridLnz[ig] = cached_eval(Cpt_Vec_Estim_lnZ_Graph, (g,nbLabels),
@@ -92,7 +101,7 @@ def test_beta_estim_obs_fields(graphs, betas, nbLabels, pfmethod, mcit=1):
         print 'testing with beta =', b, '...'
         for ig, graph in enumerate(graphs):
             mbe, stdmc = beta_estim_obs_field_mc(graph, nbLabels, b,
-                                                 gridLnz[ig], mcit, 
+                                                 gridLnz[ig], mcit,
                                                  cachePotts=False)
             print '%f(%f)' %(mbe,stdmc)
             cumulBetaEstim += mbe
@@ -114,7 +123,7 @@ class ObsField2DTest(unittest.TestCase):
     """
 
     def setUp(self):
-        self.outDir = os.path.join(config.plotSaveDir, 
+        self.outDir = os.path.join(config.plotSaveDir,
                                    './BetaEstimation')
         if not os.path.exists(self.outDir):
             os.makedirs(self.outDir)
@@ -124,7 +133,7 @@ class ObsField2DTest(unittest.TestCase):
         shape = (15,15)
         mask = np.ones(shape, dtype=int) #full mask
         self.g = graph_from_lattice(mask, kerMask=kerMask2D_4n, toroidal=True)
-        
+
     def test_single_PFES_MAP(self):
         """PF estimation method : extrapolation scheme. MAP on p(beta|label).
         """
@@ -133,7 +142,7 @@ class ObsField2DTest(unittest.TestCase):
         nbClasses = 2
 	nbTests = 30
 	#print 'g:', self.g
-        
+
 	# partition function estimation
         gridLnz = Cpt_Vec_Estim_lnZ_Graph_fast3(self.g, nbClasses)
         gridPace = gridLnz[1][1] - gridLnz[1][0]
@@ -141,7 +150,7 @@ class ObsField2DTest(unittest.TestCase):
 	bes = np.zeros(nbTests)
         for t in xrange(nbTests):
 	    labels = genPotts(self.g, beta, nbClasses)
-        
+
 	    # beta estimation
 	    be, pb = beta_estim_obs_field(self.g, labels, gridLnz, 'MAP')
 	    print 'betaMAP:', be
@@ -210,7 +219,7 @@ class ObsField2DTest(unittest.TestCase):
         nbClasses = 2
         print 'generating potts ..., beta =', beta
 
-        
+
         # grab surfacic data:
         from pyhrf.graph import graph_from_mesh, sub_graph, graph_is_sane
         from pyhrf.tools._io.tio import Texture
@@ -224,7 +233,7 @@ class ObsField2DTest(unittest.TestCase):
         triangles = [t.arraydata() for t in mesh.polygon().list()]
         print 'building graph ... '
         wholeGraph = graph_from_mesh(triangles)
-        
+
         roiMaskFile = pyhrf.get_data_file_name('roimask_gyrii_tuned.tex')
         roiMask = Texture.read(roiMaskFile).data.astype(int)
         mroi = np.where(roiMask==roiId)
@@ -236,7 +245,7 @@ class ObsField2DTest(unittest.TestCase):
         weights = [[1./dist(points[j],points[k]) for k in g[j]]
                    for j in xrange(nnodes)]
         print "weights:", len(weights), len(weights[0])
-        
+
         if 1:
             for j in xrange(nnodes):
                 s = sum(weights[j]) * 1.
@@ -246,7 +255,7 @@ class ObsField2DTest(unittest.TestCase):
         labels = genPotts(g, beta, nbClasses, weights=weights)
         print labels
         # partition function estimation
-        gridLnz = Cpt_Vec_Estim_lnZ_Graph(g, nbClasses, 
+        gridLnz = Cpt_Vec_Estim_lnZ_Graph(g, nbClasses,
                                           GraphWeight=weights)
 
         print 'gridLnz with weights:'
@@ -257,10 +266,10 @@ class ObsField2DTest(unittest.TestCase):
         print 'betaML:', be
 
         weights = None
-        gridLnz = Cpt_Vec_Estim_lnZ_Graph(g, nbClasses, 
+        gridLnz = Cpt_Vec_Estim_lnZ_Graph(g, nbClasses,
                                           GraphWeight=weights)
 
-        
+
         print 'gridLnz without weights:'
         print gridLnz
 
@@ -326,9 +335,9 @@ class ObsField2DTest(unittest.TestCase):
 
     def test_MC_comp_pfmethods_ML_100x100(self):
         self.MC_comp_pfmethods_ML((100, 100))
-        
+
     def test_MC_comp_pfmethods_ML_3C_30x30(self):
-        self.MC_comp_pfmethods_ML_3C((30, 30))        
+        self.MC_comp_pfmethods_ML_3C((30, 30))
 
     def MC_comp_pfmethods_ML(self, shape):
 
@@ -342,7 +351,7 @@ class ObsField2DTest(unittest.TestCase):
 
         # nb of monte carlo iterations
         mcit = 40#100
-        
+
         # nb of classes
         nbc = 2
 
@@ -352,7 +361,7 @@ class ObsField2DTest(unittest.TestCase):
                                                  mcit), path=config.cacheDir,
                                                 prefix='pyhrf_',
                                                 new=False)
-        
+
         # Extrapolation scheme:
         mBeES, stdBeES, stdBeMCES = cached_eval(test_beta_estim_obs_fields,
                                                 ([g], betas, nbc, 'ES',
@@ -366,7 +375,7 @@ class ObsField2DTest(unittest.TestCase):
         #                                         mcit), path=config.cacheDir,
         #                                        prefix='pyhrf_',
         #                                        new=True)
-        
+
         if self.plot:
             import matplotlib.pyplot as plt
             plt.figure()
@@ -382,8 +391,8 @@ class ObsField2DTest(unittest.TestCase):
             plt.ylim((0.0,1.45))
             #plt.title('MC validation (%d it) for beta estimation on '\
             #                ' observed fields.' %mcit)
-            #fn = 'comp_obs_field_MC_PS_ES_Onsager_%dx%d' %shape 
-            fn = 'comp_obs_field_MC_PS_%dx%d' %shape 
+            #fn = 'comp_obs_field_MC_PS_ES_Onsager_%dx%d' %shape
+            fn = 'comp_obs_field_MC_PS_%dx%d' %shape
             figFn = os.path.join(self.outDir, figfn(fn))
             plt.savefig(figFn)
 
@@ -401,7 +410,7 @@ class ObsField2DTest(unittest.TestCase):
 
         # nb of monte carlo iterations
         mcit = 100#100
-        
+
         # nb of classes
         nbc = 3
 
@@ -411,7 +420,7 @@ class ObsField2DTest(unittest.TestCase):
                                                  mcit), path=config.cacheDir,
                                                 prefix='pyhrf_',
                                                 new=False)
-        
+
         # Extrapolation scheme:
         mBeES, stdBeES, stdBeMCES = cached_eval(test_beta_estim_obs_fields,
                                                 ([g], betas, nbc, 'ES',
@@ -425,7 +434,7 @@ class ObsField2DTest(unittest.TestCase):
         #                                         mcit), path=config.cacheDir,
         #                                        prefix='pyhrf_',
         #                                        new=True)
-        
+
         if self.plot:
             import plt
             plt.figure()
@@ -439,21 +448,21 @@ class ObsField2DTest(unittest.TestCase):
             plt.legend(loc='upper left')
             #plt.title('MC validation (%d it) for beta estimation on '\
             #                ' observed fields.' %mcit)
-            fn = 'comp_obs_field_3class_MC_PS_ES_%dx%d' %shape 
+            fn = 'comp_obs_field_3class_MC_PS_ES_%dx%d' %shape
             figFn = os.path.join(self.outDir, figfn(fn))
             plt.savefig(figFn)
-            
-            
+
+
             plt.figure()
             grid = cached_eval(Cpt_Vec_Estim_lnZ_Graph_fast3, (g,nbc),
                                path=config.cacheDir, prefix='pyhrf_')
-            lnzES, betas = (grid[0][:-1], grid[1][:-1])    
+            lnzES, betas = (grid[0][:-1], grid[1][:-1])
             lnzPS, betas = cached_eval(Cpt_Vec_Estim_lnZ_Graph, (g,nbc),
                                        path=config.cacheDir, new=False,
                                        prefix='pyhrf_')
 
             plt.plot(betas, lnzES, 'r', label='ES')
             plt.plot(betas, lnzPS, 'b', label='PS')
-            fn = 'comp_PF_3class_PS_ES_%dx%d' %shape 
+            fn = 'comp_PF_3class_PS_ES_%dx%d' %shape
             figFn = os.path.join(self.outDir, figfn(fn))
             plt.savefig(figFn)

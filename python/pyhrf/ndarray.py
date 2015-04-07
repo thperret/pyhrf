@@ -6,6 +6,7 @@ axes domains). See xndarray class.
 (TODO: make xndarray inherit numpy.ndarray?)
 """
 
+import os
 import os.path as op
 import numpy as np
 import logging
@@ -19,6 +20,12 @@ from pyhrf.tools import (treeBranches, rescale_values, has_ext, tree_items,
                          html_cell, html_list_to_row, html_row, html_table,
                          html_img, html_div)
 from pyhrf.tools.backports import OrderedDict
+
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 
 logger = logging.getLogger(__name__)
