@@ -10,6 +10,7 @@ Different implementations (1) with C extensions, (2) all in python,
 WARNING: NOT WORKING!!
 """
 
+import os
 import time
 import logging
 
@@ -28,6 +29,11 @@ try:
 except ImportError:
     from pyhrf.tools.backports import OrderedDict
 
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 logger = logging.getLogger(__name__)
 

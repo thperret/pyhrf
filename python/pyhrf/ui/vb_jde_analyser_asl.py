@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import logging
 
 from time import time
@@ -16,6 +17,11 @@ from pyhrf.xmlio import XmlInitable
 from pyhrf.tools import format_duration
 from pyhrf.ui.jde import JDEAnalyser
 
+try:
+    os.environ["DISPLAY"]
+except KeyError:
+    import matplotlib
+    matplotlib.use("Agg")
 
 logger = logging.getLogger(__name__)
 
