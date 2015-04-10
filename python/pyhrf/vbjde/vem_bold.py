@@ -736,8 +736,8 @@ def Main_vbjde_Extension(graph, Y, Onsets, Thrf, K, TR, beta, dt, scale=1, estim
         int(CompTime // 60)), str(int(CompTime % 60)))
     logger.info('mu_M: %f', mu_M)
     logger.info('sigma_M: %f', sigma_M)
-    logger.info("sigma_H = %s" + str(sigmaH))
-    logger.info("Beta = %s" + str(Beta))
+    logger.info("sigma_H = %s", str(sigmaH))
+    logger.info("Beta = %s", str(Beta))
 
     StimulusInducedSignal = vt.computeFit(m_H, m_A, X, J, N)
     SNR = 20 * \
@@ -1370,7 +1370,7 @@ def Main_vbjde_Extension_stable(graph, Y, Onsets, Thrf, K, TR, beta, dt,
             sigmaH = vt.maximization_sigmaH_prior(D, Sigma_H, R, m_H, gamma_h)
         else:
             sigmaH = vt.maximization_sigmaH(D, Sigma_H, R, m_H)
-        logger.info('sigmaH = ' + str(sigmaH))
+        logger.info('sigmaH = %s', str(sigmaH))
 
     mu_M, sigma_M = vt.maximization_mu_sigma(
         mu_M, sigma_M, q_Z, m_A, K, M, Sigma_A)
@@ -1419,6 +1419,7 @@ def Main_vbjde_Extension_stable(graph, Y, Onsets, Thrf, K, TR, beta, dt,
             DIFF = np.reshape(AH - AH1, (M * J * D))
             Crit_AH = (np.linalg.norm(
                 DIFF) / (np.linalg.norm(np.reshape(AH1, (M * J * D))) + eps)) ** 2
+            logger.info("Crit_AH inside while loop: %f", Crit_AH)
             cAH += [Crit_AH]
             AH1[:, :, :] = AH[:, :, :]
 
@@ -1437,7 +1438,7 @@ def Main_vbjde_Extension_stable(graph, Y, Onsets, Thrf, K, TR, beta, dt,
                         D, Sigma_H, R, m_H, gamma_h)
                 else:
                     sigmaH = vt.maximization_sigmaH(D, Sigma_H, R, m_H)
-                logger.info('sigmaH = ' + str(sigmaH))
+                logger.info('sigmaH = %s', str(sigmaH))
 
             mu_M, sigma_M = vt.maximization_mu_sigma(
                 mu_M, sigma_M, q_Z, m_A, K, M, Sigma_A)
@@ -1554,8 +1555,8 @@ def Main_vbjde_Extension_stable(graph, Y, Onsets, Thrf, K, TR, beta, dt,
         np.int(CompTime // 60)), str(np.int(CompTime % 60)))
     logger.info('mu_M: %s', mu_M)
     logger.info('sigma_M: %s', sigma_M)
-    logger.info("sigma_H = %s" + str(sigmaH))
-    logger.info("Beta = %s" + str(Beta))
+    logger.info("sigma_H = %s", str(sigmaH))
+    logger.info("Beta = %s", str(Beta))
 
     StimulusInducedSignal = vt.computeFit(m_H, m_A, X, J, N)
     SNR = 20 * \
