@@ -1318,8 +1318,11 @@ def Main_vbjde_Extension_stable(graph, Y, Onsets, Thrf, K, TR, beta, dt,
         if estimateBeta:
             logger.info("estimating beta")
             for m in xrange(0, M):
-                Beta[m] = UtilsC.maximization_beta(beta, q_Z[m, :, :].astype(np.float64), Z_tilde[m, :, :].astype(
-                    np.float64), J, K, neighboursIndexes.astype(np.int32), gamma, maxNeighbours, MaxItGrad, gradientStep)
+                Beta[m] = UtilsC.maximization_beta(
+                    beta, q_Z[m, :, :].astype(np.float64),
+                    Z_tilde[m, :, :].astype( np.float64), J, K,
+                    neighboursIndexes.astype(np.int32), gamma, maxNeighbours,
+                    MaxItGrad, gradientStep)
             logger.info("End estimating beta")
             logger.info(Beta)
         logger.info("M sigma noise step ...")

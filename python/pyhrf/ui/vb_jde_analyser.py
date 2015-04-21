@@ -8,6 +8,7 @@ from pyhrf.ui.analyser_ui import FMRIAnalyser
 from pyhrf.ndarray import xndarray
 from pyhrf.vbjde.vem_tools import roc_curve
 from pyhrf.vbjde.vem_bold import Main_vbjde_Extension, Main_vbjde_Extension_stable, Main_vbjde_Python
+from pyhrf.vbjde.vem_bold_new import jde_vem_bold
 from pyhrf.vbjde.vem_bold_constrained import Main_vbjde_Extension_constrained, Main_vbjde_Python_constrained
 from scipy.linalg import norm
 from pyhrf.tools._io import read_volume
@@ -172,11 +173,12 @@ class JDEVEMAnalyser(JDEAnalyser):
             if not self.constrained:
                 logger.info("fast VEM with drift estimation")
 
-                NbIter, nrls, estimated_hrf, \
-                labels, noiseVar, mu_k, sigma_k, \
-                Beta, L, PL, CONTRAST, CONTRASTVAR, \
-                cA,cH,cZ,cAH,cTime,cTimeMean, Sigma_nrls, \
-                StimuIndSignal = Main_vbjde_Extension_stable(graph,data,Onsets, \
+                (NbIter, nrls, estimated_hrf,
+                labels, noiseVar, mu_k, sigma_k,
+                Beta, L, PL, CONTRAST, CONTRASTVAR,
+                cA,cH,cZ,cAH,cTime,cTimeMean, Sigma_nrls,
+                #StimuIndSignal = Main_vbjde_Extension_stable(graph,data,Onsets,
+                StimuIndSignal) = jde_vem_bold(graph, data, Onsets,
                                         self.hrfDuration, self.nbClasses,TR,
                                         beta,self.dt,scale,self.estimateSigmaH,
                                         self.sigmaH,self.nItMax, self.nItMin,

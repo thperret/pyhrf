@@ -35,12 +35,35 @@ logger = logging.getLogger(__name__)
 eps = 1e-6
 
 
-def mult(v1, v2):
+def mult_old(v1, v2):
     matrix = np.zeros((len(v1), len(v2)), dtype=float)
     for i in xrange(len(v1)):
         for j in xrange(len(v2)):
             matrix[i, j] += v1[i] * v2[j]
     return matrix
+
+
+def mult(v1, v2):
+    """Multiply two vectors.
+
+    The first vector is made vertical and the second one horizontal. The result
+    will be a matrix of size len(v1), len(v2).
+
+    Parameters
+    ----------
+    v1 : ndarray
+        unidimensional
+    v2 : ndarray
+        unidimensional
+
+    Returns
+    -------
+    x : ndarray, shape (len(v1), len(v2))
+    """
+
+    v1 = v1.reshape(len(v1), 1)
+    v2 = v2.reshape(1, len(v2))
+    return v1.dot(v2)
 
 
 def maximum(a):
