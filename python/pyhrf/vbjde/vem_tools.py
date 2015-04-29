@@ -130,8 +130,8 @@ def compute_mat_X_2(nbscans, tr, lhrf, dt, onsets, durations=None):
 
 
 def buildFiniteDiffMatrix(order, size):
-    o = order
-    a = np.diff(np.concatenate((np.zeros(o), [1], np.zeros(o))), n=o)
+    a = np.diff(np.concatenate((np.zeros(order), [1], np.zeros(order))),
+                n=order)
     b = a[len(a) / 2:]
     diffMat = toeplitz(np.concatenate((b, np.zeros(size - len(b)))))
     return diffMat
