@@ -212,8 +212,10 @@ class FMRITreatment(xmlio.XmlInitable):
                 parallel_verb = 10
 
             if n_jobs is None:
-                n_jobs = available_cpu_count()
-                # n_jobs = cfg_parallel['nb_procs']
+                if cfg_parallel["nb_procs"]:
+                    n_jobs = cfg_parallel["nb_procs"]
+                else:
+                    n_jobs = available_cpu_count()
 
             p = Parallel(n_jobs=n_jobs, verbose=parallel_verb)
             result = p(delayed(exec_t)(t) for t in self.split(output_dir=None))
