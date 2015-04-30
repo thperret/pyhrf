@@ -182,7 +182,7 @@ class JDEVEMAnalyser(JDEAnalyser):
                     graph, data, Onsets, self.hrfDuration, self.nbClasses,TR,
                     beta, self.dt, scale, self.estimateSigmaH, self.sigmaH,
                     self.nItMax, self.nItMin, self.estimateBeta, self.PLOT,
-                    self.contrasts, self.computeContrast, 0.0001) #,
+                    self.contrasts, self.computeContrast, 10**7) #,
                                         # self.hyper_prior_sigma_H,self.estimateHRF,
                                         # self.TrueHrfFlag, self.HrfFilename,
                                         # self.estimateLabels,self.LabelsFilename,
