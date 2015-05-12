@@ -156,8 +156,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     gradient_step = 0.003
     it_max_grad = 200
     thresh = 1e-5
-    thresh_free_energy = 1e-5 if estimate_free_energy else 10  # TODO: debug remove
-
+    thresh_free_energy = 1e-5
     # Initialize sizes vectors
     hrf_len = np.int(np.ceil(hrf_duration / dt)) + 1
     nb_conditions = len(onsets)
@@ -342,18 +341,22 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         DIFF[np.where((DIFF < 1e-50) & (DIFF > 0.0))] = 0.0
         # To avoid numerical problems
         DIFF[np.where((DIFF > -1e-50) & (DIFF < 0.0))] = 0.0
-        # if np.linalg.norm(np.reshape(AH1, (nb_conditions * nb_voxels * hrf_len))) > 0:
-            # Crit_AH = (
-                # np.linalg.norm(DIFF) /
-                # (np.linalg.norm(np.reshape(
-                    # AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
-        # else:
-            # # TODO: norm shouldn't be 0
-            # Crit_AH = None
-        Crit_AH = (
-            np.linalg.norm(DIFF) /
-            (np.linalg.norm(np.reshape(
-                AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
+        if np.linalg.norm(np.reshape(AH1, (nb_conditions * nb_voxels * hrf_len))) > 0:
+            Crit_AH = (
+                np.linalg.norm(DIFF) /
+                (np.linalg.norm(np.reshape(
+                    AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
+        else:
+            # TODO: norm shouldn't be 0
+            logger.warning("AH norm should not be zero: %f",
+                           np.linalg.norm(np.reshape(AH1, (nb_conditions *
+                                                           nb_voxels *
+                                                           hrf_len))))
+            Crit_AH = None
+        # Crit_AH = (
+            # np.linalg.norm(DIFF) /
+            # (np.linalg.norm(np.reshape(
+                # AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
         logger.info("Convergence criteria: %f (Threshold = %f)",
                     Crit_AH, thresh)
         cAH += [Crit_AH]
