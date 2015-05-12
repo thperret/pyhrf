@@ -451,7 +451,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         for i in xrange(loop):
             SUM_q_Z_array[m, i] = SUM_q_Z[m][i]
             mu1_array[m, i] = mu1[m][i]
-            h_norm_array[i] = h_norm[i]
+    h_norm_array = np.array(h_norm)
 
     if plot:
         font = {'size': 15}
