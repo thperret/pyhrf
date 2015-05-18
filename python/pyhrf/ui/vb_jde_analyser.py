@@ -320,7 +320,7 @@ class JDEVEMAnalyser(JDEAnalyser):
             axes_names = ['duration']
             outName = 'Convergence_Labels'
             ax = np.arange(self.nItMax)*cTimeMean
-            ax[:len(cTime)] = cTime
+            ax[:len(cTime)-1] = cTime[:-1]
             ad = {'duration':ax}
             c = np.zeros(self.nItMax) #-.001 #
             c[:len(cZ)] = cZ
