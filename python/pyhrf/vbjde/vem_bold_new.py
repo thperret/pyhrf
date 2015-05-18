@@ -180,8 +180,8 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
 
     order = 2
     D2 = vt.buildFiniteDiffMatrix(order, hrf_len)
-    R = np.dot(D2, D2) / pow(dt, 2 * order)
-    invR = np.linalg.inv(R)
+    hrf_reguralization_prior = np.dot(D2, D2) / pow(dt, 2 * order)
+    invR = np.linalg.inv(hrf_reguralization_prior)
     Det_invR = np.linalg.det(invR)
 
     Gamma = np.identity(nb_scans)
@@ -234,9 +234,9 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     m_H1 = np.array(m_h)
     sigmaH1 = sigma_h
     if estimate_hrf:
-        Sigma_H = np.ones((hrf_len, hrf_len), dtype=np.float64)
+        hrf_covariance = np.ones((hrf_len, hrf_len), dtype=np.float64)
     else:
-        Sigma_H = np.zeros((hrf_len, hrf_len), dtype=np.float64)
+        hrf_covariance = np.zeros((hrf_len, hrf_len), dtype=np.float64)
 
 
     Beta = beta * np.ones((nb_conditions), dtype=np.float64)
@@ -252,7 +252,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     mu_M = np.zeros((nb_conditions, nb_classes), dtype=np.float64)
     for k in xrange(1, nb_classes):
         mu_M[:, k] = 1  # init_mean
-    Sigma_A = 0.01 * (np.identity(nb_conditions).reshape((nb_conditions, nb_conditions, 1))
+        Sigma_A = 0.01 * (np.identity(nb_conditions)[:, :, np.newaxis]
                       + np.zeros((1, 1, nb_voxels)))
     m_A = np.zeros((nb_voxels, nb_conditions), dtype=np.float64)
     m_A1 = np.zeros((nb_voxels, nb_conditions), dtype=np.float64)
@@ -274,7 +274,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         logger.info("Expectation A step...")
         logger.debug("Before: m_A = %s, Sigma_A = %s", m_A, Sigma_A)
         nrls_expectation = UtilsC.expectation_A(q_Z, mu_M, sigma_M, drift,
-                                                sigma_epsilone, Gamma, Sigma_H,
+                                                sigma_epsilone, Gamma, hrf_covariance,
                                                 bold_data, y_tilde, m_A, m_H,
                                                 Sigma_A, XX.astype(np.int32),
                                                 nb_voxels, hrf_len, nb_conditions,
@@ -282,16 +282,16 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         logger.debug("After: m_A = %s, Sigma_A = %s", m_A, Sigma_A)
         if estimate_hrf:
             logger.info("Expectation H step...")
-            logger.debug("Before: m_H = %s, Sigma_H = %s", m_H, Sigma_H)
+            logger.debug("Before: m_H = %s, hrf_covariance = %s", m_H, hrf_covariance)
             hrf_expectation = UtilsC.expectation_H(XGamma, Q_barnCond,
-                                                   sigma_epsilone, Gamma, R,
-                                                   Sigma_H, bold_data, y_tilde,
+                                                   sigma_epsilone, Gamma, hrf_reguralization_prior,
+                                                   hrf_covariance, bold_data, y_tilde,
                                                    m_A, m_H, Sigma_A,
                                                    XX.astype(np.int32),
                                                    nb_voxels, hrf_len,
                                                    nb_conditions, nb_scans, scale,
                                                    sigma_h)
-            logger.debug("Before: m_H = %s, Sigma_H = %s", m_H, Sigma_H)
+            logger.debug("Before: m_H = %s, hrf_covariance = %s", m_H, hrf_covariance)
             m_H[0] = 0
             m_H[-1] = 0
             h_norm.append(np.linalg.norm(m_H))
@@ -302,7 +302,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
                 if (loop + 1) % Nb2Norm == 0:
                     Norm = np.linalg.norm(m_H)
                     m_H /= Norm
-                    Sigma_H /= Norm ** 2
+                    hrf_covariance /= Norm ** 2
                     m_A *= Norm
                     Sigma_A *= Norm ** 2
             # Plotting HRF
@@ -393,13 +393,13 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
 
         if estimate_hrf and estimate_sigma_h:
             logger.info("Maximization sigma_H step...")
-            logger.debug("Before: Sigma_H = %s", Sigma_H)
+            logger.debug("Before: hrf_covariance = %s", hrf_covariance)
             if gamma_h > 0:
                 sigma_h = vt.maximization_sigmaH_prior(
-                    hrf_len, Sigma_H, R, m_H, gamma_h)
+                    hrf_len, hrf_covariance, hrf_reguralization_prior, m_H, gamma_h)
             else:
-                sigma_h = vt.maximization_sigmaH(hrf_len, Sigma_H, R, m_H)
-            logger.debug("After: Sigma_H = %s", Sigma_H)
+                sigma_h = vt.maximization_sigmaH(hrf_len, hrf_covariance, hrf_reguralization_prior, m_H)
+            logger.debug("After: hrf_covariance = %s", hrf_covariance)
 
         logger.info("Maximization (mu,sigma) step...")
         logger.debug("Before: mu_M = %s, sigma_M = %s", mu_M, sigma_M)
@@ -431,7 +431,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
             logger.debug("Beta = %s", str(Beta))
 
         logger.info("Maximization sigma noise step...")
-        UtilsC.maximization_sigma_noise(Gamma, drift, sigma_epsilone, Sigma_H,
+        UtilsC.maximization_sigma_noise(Gamma, drift, sigma_epsilone, hrf_covariance,
                                         bold_data, m_A, m_H, Sigma_A,
                                         XX.astype(np.int32), nb_voxels, hrf_len,
                                         nb_conditions, nb_scans)
@@ -439,7 +439,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         #### Computing Free Energy ####
         if estimate_hrf and estimate_labels and estimate_free_energy:
             free_energy_prev = free_energy[-1]
-            free_energy.append(vt.free_energy_computation(Sigma_A, Sigma_H, q_Z,
+            free_energy.append(vt.free_energy_computation(Sigma_A, hrf_covariance, q_Z,
                                                           nb_voxels, hrf_len,
                                                           nb_conditions,
                                                           nrls_expectation,
@@ -475,7 +475,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     if not NormFlag:
         Norm = np.linalg.norm(m_H)
         m_H /= Norm
-        Sigma_H /= Norm ** 2
+        hrf_covariance /= Norm ** 2
         sigma_h /= Norm ** 2
         m_A *= Norm
         Sigma_A *= Norm ** 2
