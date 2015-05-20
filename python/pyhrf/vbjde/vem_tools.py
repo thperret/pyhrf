@@ -82,7 +82,7 @@ def maximum(iterable):
 
     Parameter
     ---------
-    iterable : iterable
+    iterable : iterable or numpy array
 
     Returns
     tuple :
@@ -92,7 +92,14 @@ def maximum(iterable):
 
     iter_max = max(iterable)
 
-    return iter_max, iterable.index(iter_max)
+    try:
+        # this is an iterable (tuple or list)
+        iter_max_indice = iterable.index(iter_max)
+    except AttributeError:
+        # this is an numpy array
+        iter_max_indice = iterable.argmax()
+
+    return iter_max, iter_max_indice
 
 
 def normpdf(x, mu, sigma):
