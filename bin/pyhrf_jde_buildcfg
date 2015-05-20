@@ -5,6 +5,7 @@ import string
 import logging
 
 from optparse import OptionParser
+from collections import OrderedDict
 
 import pyhrf
 import pyhrf.ui.treatment as ptr
@@ -81,7 +82,7 @@ pyhrf.logger.setLevel(options.verbose)
 if options.contrasts:
     contrasts = eval('pyhrf.paradigm.default_contrasts_%s' %options.paradigm)
 else:
-    contrasts = {'dummy_contrast_example' : '3*audio - video/3'}
+    contrasts = OrderedDict({'dummy_contrast_example' : '3*audio - video/3'})
 
 if options.jpde:
     options.variational_em = True

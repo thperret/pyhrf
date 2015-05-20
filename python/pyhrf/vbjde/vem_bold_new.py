@@ -93,8 +93,8 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     plot : bool, optional
         if True, plot some images of some variables (TODO: describe, or better,
         remove)
-    contrasts : list, optional
-        list of contrasts to compute
+    contrasts : OrderedDict, optional
+        dict of contrasts to compute
     compute_contrasts : bool, optional
         if True, compute the contrasts defined in contrasts
     gamma_h : float (TODO: check)
@@ -142,7 +142,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     logger.info("Fast EM with C extension started.")
 
     if not contrasts:
-        contrasts = []
+        contrasts = OrderedDict()
 
     np.random.seed(seed)
 
@@ -170,7 +170,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     for i in xrange(nb_voxels):
         neighbours_indexes[i, :len(graph[i])] = graph[i]
 
-    X = OrderedDict([])
+    X = OrderedDict()
     for condition, onset in onsets.iteritems():
         X[condition] = vt.compute_mat_X_2(nb_scans, tr, hrf_len, dt, onset)
         condition_names.append(condition)

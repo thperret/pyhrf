@@ -2,8 +2,11 @@
 
 import logging
 
-import numpy as np
 from time import time
+from collections import OrderedDict
+
+import numpy as np
+
 from pyhrf.ui.analyser_ui import FMRIAnalyser
 from pyhrf.ndarray import xndarray
 from pyhrf.vbjde.vem_tools import roc_curve
@@ -94,7 +97,7 @@ class JDEVEMAnalyser(JDEAnalyser):
                  nItMin=1, scale=False, beta=1.0, estimateSigmaH=True,
                  estimateHRF=True, TrueHrfFlag=False,HrfFilename='hrf.nii',
                  estimateDrifts=True, hyper_prior_sigma_H=1000, dt=.6,
-                 estimateBeta=True, contrasts={'1':'rel1'}, simulation=False,
+                 estimateBeta=True, contrasts=None, simulation=False,
                  estimateLabels=True, LabelsFilename='labels.nii',
                  MFapprox=False, estimateMixtParam=True, constrained = False,
                  InitVar=0.5,InitMean=2.0,MiniVemFlag=False,NbItMiniVem=5):
@@ -131,7 +134,7 @@ class JDEVEMAnalyser(JDEAnalyser):
         self.MiniVemFlag = MiniVemFlag
         self.NbItMiniVem = NbItMiniVem
         if contrasts is None:
-            contrasts = {}
+            contrasts = OrderedDict()
         self.contrasts = contrasts
         self.computeContrast = computeContrast
         self.hyper_prior_sigma_H = hyper_prior_sigma_H
