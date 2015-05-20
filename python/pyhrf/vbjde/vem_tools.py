@@ -154,11 +154,36 @@ def compute_mat_X_2(nbscans, tr, lhrf, dt, onsets, durations=None):
     return x
 
 
-def buildFiniteDiffMatrix(order, size):
+def buildFiniteDiffMatrix(order, size, reguralization=None):
+    """Build the finite difference matrix used for the hrf reguralization prior.
+
+    Parameters
+    ----------
+    order : int
+        difference order (see numpy.diff function)
+    size : int
+        size of the matrix
+    reguralization : array like, optional
+        one dimensional vector of factors used for reguralize the hrf
+
+    Returns
+    -------
+    diffMat : ndarray, shape (size, size)
+        the finite difference matrix"""
+
     a = np.diff(np.concatenate((np.zeros(order), [1], np.zeros(order))),
                 n=order)
     b = a[len(a) / 2:]
     diffMat = toeplitz(np.concatenate((b, np.zeros(size - len(b)))))
+    if reguralization is not None:
+        reguralization = np.array(reguralization)
+        if reguralization.shape != (size,):
+            raise Exception("reguralization shape ({}) must be (size,) ({},)".format(reguralization.shape, size))
+        if not all(reguralization > 0):
+            raise Exception("All values of reguralization must be stricly positive")
+        diffMat = (np.triu(diffMat, 1) * reguralization +
+                   np.tril(diffMat, -1) * reguralization[:, np.newaxis] +
+                   np.diag(diffMat.diagonal() * reguralization))
     return diffMat
 
 

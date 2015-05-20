@@ -179,7 +179,13 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         XX[nc, :, :] = X[condition]
 
     order = 2
-    D2 = vt.buildFiniteDiffMatrix(order, hrf_len)
+    reguralization = np.ones(hrf_len)
+    # reguralization[hrf_len//3:hrf_len//2] = 2
+    # reguralization[hrf_len//2:2*hrf_len//3] = 5
+    # reguralization[2*hrf_len//3:3*hrf_len//4] = 7
+    # reguralization[3*hrf_len//4:] = 10
+    reguralization[hrf_len//2:] = 10
+    D2 = vt.buildFiniteDiffMatrix(order, hrf_len, reguralization=reguralization)
     hrf_reguralization_prior = np.dot(D2, D2) / pow(dt, 2 * order)
     invR = np.linalg.inv(hrf_reguralization_prior)
     Det_invR = np.linalg.det(invR)
@@ -238,7 +244,6 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     else:
         hrf_covariance = np.zeros((hrf_len, hrf_len), dtype=np.float64)
 
-
     Beta = beta * np.ones((nb_conditions), dtype=np.float64)
     drift_basis = vt.PolyMat(nb_scans, 4, tr)
     drift_coeffs = vt.polyFit(bold_data, tr, 4, drift_basis)
@@ -253,7 +258,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     for k in xrange(1, nb_classes):
         mu_M[:, k] = 1  # init_mean
         Sigma_A = 0.01 * (np.identity(nb_conditions)[:, :, np.newaxis]
-                      + np.zeros((1, 1, nb_voxels)))
+                          + np.zeros((1, 1, nb_voxels)))
     m_A = np.zeros((nb_voxels, nb_conditions), dtype=np.float64)
     m_A1 = np.zeros((nb_voxels, nb_conditions), dtype=np.float64)
     for j in xrange(0, nb_voxels):
@@ -356,7 +361,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         # Crit_AH = (
             # np.linalg.norm(DIFF) /
             # (np.linalg.norm(np.reshape(
-                # AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
+            # AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
         logger.info("Convergence criteria: %f (Threshold = %f)",
                     Crit_AH, thresh)
         cAH += [Crit_AH]
@@ -395,10 +400,12 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
             logger.info("Maximization sigma_H step...")
             logger.debug("Before: hrf_covariance = %s", hrf_covariance)
             if gamma_h > 0:
-                sigma_h = vt.maximization_sigmaH_prior(
-                    hrf_len, hrf_covariance, hrf_reguralization_prior, m_H, gamma_h)
+                sigma_h = vt.maximization_sigmaH_prior(hrf_len, hrf_covariance,
+                                                       hrf_reguralization_prior,
+                                                       m_H, gamma_h)
             else:
-                sigma_h = vt.maximization_sigmaH(hrf_len, hrf_covariance, hrf_reguralization_prior, m_H)
+                sigma_h = vt.maximization_sigmaH(hrf_len, hrf_covariance,
+                                                 hrf_reguralization_prior, m_H)
             logger.debug("After: hrf_covariance = %s", hrf_covariance)
 
         logger.info("Maximization (mu,sigma) step...")
