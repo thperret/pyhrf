@@ -179,16 +179,15 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         XX[nc, :, :] = X[condition]
 
     order = 2
-    reguralization = np.ones(hrf_len)
-    # reguralization[hrf_len//3:hrf_len//2] = 2
-    # reguralization[hrf_len//2:2*hrf_len//3] = 5
-    # reguralization[2*hrf_len//3:3*hrf_len//4] = 7
-    # reguralization[3*hrf_len//4:] = 10
-    reguralization[hrf_len//2:] = 10
-    D2 = vt.buildFiniteDiffMatrix(order, hrf_len, reguralization=reguralization)
-    hrf_reguralization_prior = np.dot(D2, D2) / pow(dt, 2 * order)
-    invR = np.linalg.inv(hrf_reguralization_prior)
-    Det_invR = np.linalg.det(invR)
+    # regularization = None
+    regularization = np.ones(hrf_len)
+    # regularization[hrf_len//3:hrf_len//2] = 2
+    # regularization[hrf_len//2:2*hrf_len//3] = 5
+    # regularization[2*hrf_len//3:3*hrf_len//4] = 7
+    # regularization[3*hrf_len//4:] = 10
+    regularization[hrf_len//2:] = 10
+    D2 = vt.buildFiniteDiffMatrix(order, hrf_len, regularization)
+    hrf_regularization_prior = np.dot(D2, D2) / pow(dt, 2 * order)
 
     Gamma = np.identity(nb_scans)
     Det_Gamma = np.linalg.det(Gamma)
@@ -289,7 +288,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
             logger.info("Expectation H step...")
             logger.debug("Before: m_H = %s, hrf_covariance = %s", m_H, hrf_covariance)
             hrf_expectation = UtilsC.expectation_H(XGamma, Q_barnCond,
-                                                   sigma_epsilone, Gamma, hrf_reguralization_prior,
+                                                   sigma_epsilone, Gamma, hrf_regularization_prior,
                                                    hrf_covariance, bold_data, y_tilde,
                                                    m_A, m_H, Sigma_A,
                                                    XX.astype(np.int32),
@@ -346,22 +345,13 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         DIFF[np.where((DIFF < 1e-50) & (DIFF > 0.0))] = 0.0
         # To avoid numerical problems
         DIFF[np.where((DIFF > -1e-50) & (DIFF < 0.0))] = 0.0
-        if np.linalg.norm(np.reshape(AH1, (nb_conditions * nb_voxels * hrf_len))) > 0:
-            Crit_AH = (
-                np.linalg.norm(DIFF) /
-                (np.linalg.norm(np.reshape(
-                    AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
-        else:
+        Crit_AH = (np.linalg.norm(DIFF) /
+                   (np.linalg.norm(np.reshape(AH1, (nb_conditions * nb_voxels * hrf_len)))
+                    + eps)) ** 2
+        if np.linalg.norm(np.reshape(AH1, (nb_conditions * nb_voxels * hrf_len))) == 0:
             # TODO: norm shouldn't be 0
-            logger.warning("AH norm should not be zero: %f",
-                           np.linalg.norm(np.reshape(AH1, (nb_conditions *
-                                                           nb_voxels *
-                                                           hrf_len))))
-            Crit_AH = None
-        # Crit_AH = (
-            # np.linalg.norm(DIFF) /
-            # (np.linalg.norm(np.reshape(
-            # AH1, (nb_conditions * nb_voxels * hrf_len))) + eps)) ** 2
+            logger.warning("AH norm should not be zero")
+
         logger.info("Convergence criteria: %f (Threshold = %f)",
                     Crit_AH, thresh)
         cAH += [Crit_AH]
@@ -398,15 +388,15 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
 
         if estimate_hrf and estimate_sigma_h:
             logger.info("Maximization sigma_H step...")
-            logger.debug("Before: hrf_covariance = %s", hrf_covariance)
+            logger.debug("Before: sigma_h = %s", sigma_h)
             if gamma_h > 0:
                 sigma_h = vt.maximization_sigmaH_prior(hrf_len, hrf_covariance,
-                                                       hrf_reguralization_prior,
+                                                       hrf_regularization_prior,
                                                        m_H, gamma_h)
             else:
                 sigma_h = vt.maximization_sigmaH(hrf_len, hrf_covariance,
-                                                 hrf_reguralization_prior, m_H)
-            logger.debug("After: hrf_covariance = %s", hrf_covariance)
+                                                 hrf_regularization_prior, m_H)
+            logger.debug("After: sigma_h = %s", sigma_h)
 
         logger.info("Maximization (mu,sigma) step...")
         logger.debug("Before: mu_M = %s, sigma_M = %s", mu_M, sigma_M)
