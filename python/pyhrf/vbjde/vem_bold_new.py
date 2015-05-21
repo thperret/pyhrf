@@ -529,10 +529,10 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     logger.info("Nb iterations to reach criterion: %d", loop)
     logger.info("Computational time = %s min %s s",
                 *(str(int(x)) for x in divmod(compute_time[-1], 60)))
-    logger.info('mu_M: %s', mu_M)
-    logger.info('sigma_M: %s', sigma_M)
-    logger.info("sigma_H = %s", str(sigma_h))
-    logger.info("Beta = %s", str(Beta))
+    logger.debug('mu_M: %s', mu_M)
+    logger.debug('sigma_M: %s', sigma_M)
+    logger.debug("sigma_H = %s", str(sigma_h))
+    logger.debug("Beta = %s", str(Beta))
 
     StimulusInducedSignal = vt.computeFit(m_H, m_A, X, nb_voxels, nb_scans)
     SNR = 20 * np.log(
