@@ -179,15 +179,16 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
         XX[nc, :, :] = X[condition]
 
     order = 2
-    # regularization = None
-    regularization = np.ones(hrf_len)
+    regularization = None
+    # regularization = np.ones(hrf_len)
     # regularization[hrf_len//3:hrf_len//2] = 2
     # regularization[hrf_len//2:2*hrf_len//3] = 5
     # regularization[2*hrf_len//3:3*hrf_len//4] = 7
     # regularization[3*hrf_len//4:] = 10
-    regularization[hrf_len//2:] = 10
+    # regularization[hrf_len//2:] = 10
     D2 = vt.buildFiniteDiffMatrix(order, hrf_len, regularization)
     hrf_regularization_prior = np.dot(D2, D2) / pow(dt, 2 * order)
+    hrf_regularization_prior[hrf_len//2:, hrf_len//2:] = hrf_regularization_prior[hrf_len//2:, hrf_len//2:] * 1000
 
     Gamma = np.identity(nb_scans)
     Det_Gamma = np.linalg.det(Gamma)
@@ -295,9 +296,11 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
                                                    nb_voxels, hrf_len,
                                                    nb_conditions, nb_scans, scale,
                                                    sigma_h)
+            m_H = vt.norm1_constraint(m_H, hrf_covariance)
+            hrf_covariance[:] = 0
             logger.debug("Before: m_H = %s, hrf_covariance = %s", m_H, hrf_covariance)
-            m_H[0] = 0
-            m_H[-1] = 0
+            # m_H[0] = 0
+            # m_H[-1] = 0
             h_norm.append(np.linalg.norm(m_H))
             # Normalizing H at each Nb2Norm iterations:
             if NormFlag:
@@ -469,15 +472,15 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
 
     compute_time_mean = compute_time[-1] / loop
 
-    if not NormFlag:
-        Norm = np.linalg.norm(m_H)
-        m_H /= Norm
-        hrf_covariance /= Norm ** 2
-        sigma_h /= Norm ** 2
-        m_A *= Norm
-        Sigma_A *= Norm ** 2
-        mu_M *= Norm
-        sigma_M *= Norm ** 2
+    # if not NormFlag:
+        # Norm = np.linalg.norm(m_H)
+        # m_H /= Norm
+        # hrf_covariance /= Norm ** 2
+        # sigma_h /= Norm ** 2
+        # m_A *= Norm
+        # Sigma_A *= Norm ** 2
+        # mu_M *= Norm
+        # sigma_M *= Norm ** 2
     sigma_M = np.sqrt(np.sqrt(sigma_M))
 
     #+++++++++++++++++++++++  calculate contrast maps and variance +++++++++++++++++++++++#

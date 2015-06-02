@@ -86,7 +86,7 @@ def _trap_area( p1, p2 ):
     avg_ht = ( p1[ 1 ] + p2[ 1 ] ) / 2.0
 
     return base * avg_ht
-    
+
 def roc_curve(dvals, labels, rocN=None, normalize=True):
     """
     Compute ROC curve coordinates and area
@@ -312,8 +312,8 @@ def constraint_norm1_b(Ftilde, Sigma_F, positivity=False, perfusion=None):
         print "Random perturbations of optimal point"
         for _ in xrange(20):
             z = y + np.random.randn(*y.shape) * 1e-3
-            print "fun(z) = %g" % fun(z)    
-    
+            print "fun(z) = %g" % fun(z)
+
         print 'L-BFGS-B method: '
         y2 = fmin_l_bfgs_b(fung, zeros_F, bounds=[(-1, 1)] * (len(zeros_F)))
         print y2[0]
@@ -324,7 +324,7 @@ def constraint_norm1_b(Ftilde, Sigma_F, positivity=False, perfusion=None):
         for _ in xrange(20):
             z = y2[0] + np.random.randn(*y2[0].shape) * 1e-3
             w = fung(z)
-            print "fung(z) = %g" % w[0]    
+            print "fung(z) = %g" % w[0]
     return y
     #fun = lambda F: np.dot(np.dot((F - Ftilde).T, Sigma_F_inv),
     #                              (F - Ftilde))
