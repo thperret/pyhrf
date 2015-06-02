@@ -173,38 +173,18 @@ class JDEVEMAnalyser(JDEAnalyser):
         t_start = time()
 
         if self.fast:
-            if not self.constrained:
-                logger.info("fast VEM with drift estimation")
-
-                (NbIter, nrls, estimated_hrf, labels, noiseVar, mu_k, sigma_k,
-                 Beta, L, PL, CONTRAST, CONTRASTVAR, cA, cH, cZ, cAH, cTime,
-                 cTimeMean, Sigma_nrls, StimuIndSignal) = jde_vem_bold(
-                     graph, data, Onsets, self.hrfDuration, self.nbClasses, TR,
-                     beta, self.dt, scale, self.estimateSigmaH, self.sigmaH,
-                     self.nItMax, self.nItMin, self.estimateBeta, self.PLOT,
-                     self.contrasts, self.computeContrast,
-                     self.hyper_prior_sigma_H, self.estimateHRF,
-                     self.TrueHrfFlag, self.HrfFilename, self.estimateLabels,
-                     self.LabelsFilename)
-            else:
-                logger.info("fast VEM with drift estimation and a constraint")
-
-                NbIter, nrls, estimated_hrf, \
-                labels, noiseVar, mu_k, sigma_k, \
-                Beta, L, PL, CONTRAST, CONTRASTVAR, \
-                cA,cH,cZ,cAH,cTime,cTimeMean, \
-                Sigma_nrls, StimuIndSignal,\
-                FreeEnergy = Main_vbjde_Extension_constrained(graph,data,Onsets, \
-                                        self.hrfDuration, self.nbClasses,TR,
-                                        beta,self.dt,scale,self.estimateSigmaH,
-                                        self.sigmaH,self.nItMax, self.nItMin,
-                                        self.estimateBeta,self.PLOT,
-                                        self.contrasts,self.computeContrast,
-                                        self.hyper_prior_sigma_H,self.estimateHRF,
-                                        self.TrueHrfFlag, self.HrfFilename,
-                                        self.estimateLabels,self.LabelsFilename,
-                                        self.MFapprox,self.InitVar,self.InitMean,
-                                        self.MiniVemFlag,self.NbItMiniVem)
+            logger.info("fast VEM with drift estimation"+
+                        ("and a constraint"*self.constrained))
+            (NbIter, nrls, estimated_hrf, labels, noiseVar, mu_k, sigma_k,
+             Beta, L, PL, CONTRAST, CONTRASTVAR, cA, cH, cZ, cAH, cTime,
+             cTimeMean, Sigma_nrls, StimuIndSignal) = jde_vem_bold(
+                 graph, data, Onsets, self.hrfDuration, self.nbClasses, TR,
+                 beta, self.dt, scale, self.estimateSigmaH, self.sigmaH,
+                 self.nItMax, self.nItMin, self.estimateBeta, self.PLOT,
+                 self.contrasts, self.computeContrast,
+                 self.hyper_prior_sigma_H, self.estimateHRF,
+                 self.TrueHrfFlag, self.HrfFilename, self.estimateLabels,
+                 self.LabelsFilename, self.constrained)
         else:
             # if not self.fast
             if self.estimateDrifts:
