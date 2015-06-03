@@ -1693,7 +1693,7 @@ class NRLSampler(xmlio.XmlInitable, GibbsSamplerVariable):
             logger.debug('self.finalValue.mean(1).max(): %f',
                          self.finalValue.mean(1).max())
             logger.debug('(self.finalValue.max(0) > t).sum(): %d',
-                         self.finalValue.max(0) > t).sum()
+                         (self.finalValue.max(0) > t).sum())
             region_is_active = np.tile(region_is_active, self.nbVox)
 
             outputs['active_regions_from_nrls'] = xndarray(region_is_active,
