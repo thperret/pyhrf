@@ -120,6 +120,12 @@ def create_localizer_paradigm_avd(condition_defs):
     return par
 
 
+def createLocalizer2CondParadigm_StimDen(onsets):
+    onsets = dict(zip(onsets.keys(),[[o] for o in onsets.values()]))
+    paradigm = mpar.Paradigm(onsets)
+    return paradigm
+
+
 def create_localizer_paradigm_a(condition_defs):
     ons = mpar.onsets_loc_a
     dur = paradigm.durations_loc_a
