@@ -92,7 +92,7 @@ def contrast_vec_to_name(contrast_vector, conditions):
 
     return "".join([((str(numpy.sign(factor))[0:-1]+ "+" * bool(factor>0) + conditions[i])
                      * abs(factor)) for i, factor in
-                    enumerate(contrast_vector)])[1:]
+                    enumerate(contrast_vector)])
 
 
 def clean_string_for_xml(name):
