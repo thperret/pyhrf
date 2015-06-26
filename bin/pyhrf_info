@@ -12,7 +12,7 @@ import numpy as np
 
 import pyhrf
 from pyhrf.tools._io.tio import Texture
-from pyhrf.tools._io.spmio import load_paradigm_from_mat, load_contrasts
+from pyhrf.tools._io.spmio import load_paradigm_from_mat, load_contrasts_from_mat
 
 from pyhrf.parcellation import parcellation_report
 
@@ -31,7 +31,7 @@ def describe_mat_file(filename):
     print 'TR =', tr
     print '*** Constrasts ***'
 
-    conts = load_contrasts(filename)
+    conts = load_contrasts_from_mat(filename)
     for i, c in enumerate(conts):
         print '%d (%s): %s ' % (i + 1, str(c[2][0]), str(c[0][0]))
     for i, c in enumerate(conts):
