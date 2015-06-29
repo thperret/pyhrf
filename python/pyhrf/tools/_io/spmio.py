@@ -90,9 +90,9 @@ def contrast_vec_to_name(contrast_vector, conditions):
     linear_combination : string
     """
 
-    return "".join([((str(numpy.sign(factor))[0:-1]+ "+" * bool(factor>0) + conditions[i])
+    return "(" + "".join([((str(numpy.sign(factor))[0:-1]+ "+" * bool(factor>0) + conditions[i])
                      * abs(factor)) for i, factor in
-                    enumerate(contrast_vector)])
+                    enumerate(contrast_vector)]) + ")/" + str(sum(abs(contrast_vector)))
 
 
 def clean_string_for_xml(name):
