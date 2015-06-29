@@ -244,6 +244,11 @@ class JDEVEMAnalyser(JDEAnalyser):
                                             axes_names=['condition','voxel'],
                                             axes_domains=domCondition)
 
+            repeated_hrf = np.repeat(estimated_hrf, nbv).reshape(-1, nbv)
+            outputs["hrf_mapped"] = xndarray(repeated_hrf, value_label="HRFs",
+                                             axes_names=["time", "voxel"]
+                                             axes_domains={"time": hrf_time})
+
             outputs['roi_mask'] = xndarray(np.zeros(nbv)+roiData.get_roi_id(),
                                         value_label="ROI",
                                         axes_names=['voxel'])
