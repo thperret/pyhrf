@@ -388,6 +388,19 @@ class FMRITreatment(xmlio.XmlInitable):
                           for d in self.analyser.split_data(self.data)]
 
         if output_dir is not None:
+
+            if op.exists(output_dir) and not op.isdir(output_dir):
+                logger.error("Output directory (%s) exists but is not a folder. "
+                             "No output will be processed.", output_dir)
+                Exception("Output directory already exists but is not a fodler.")
+            elif not op.exists(output_dir):
+                try:
+                    os.mkdir(output_dir)
+                except OSError as e:
+                    logger.error("An exception occured while creating directory %s. "
+                                 "Exception: %s (%s). No output will be processed",
+                                 output_dir, e.message, e.strerr)
+
             logger.info('Dump sub treatments in: %s ...', output_dir)
             cmp_size = lambda t1, t2: cmp(t1.data.get_nb_vox_in_mask(),
                                           t2.data.get_nb_vox_in_mask())
