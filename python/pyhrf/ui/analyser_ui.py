@@ -321,6 +321,18 @@ class FMRIAnalyser(xmlio.XmlInitable):
         data_rois = [r[0] for r in results]
         irois = [d.get_roi_id() for d in data_rois]
 
+        if op.exists(output_dir) and not op.isdir(output_dir):
+            logger.error("Output directory (%s) exists but is not a folder. "
+                         "No output will be processed.", output_dir)
+            return {}, []
+        elif not op.exists(output_dir):
+            try:
+                os.mkdir(output_dir)
+            except OSError as e:
+                logger.error("An exception occured while creating directory %s. "
+                             "Exception: %s (%s). No output will be processed",
+                             output_dir, e.message, e.strerr)
+
         if isinstance(results[0][0], FmriData):
             return self.make_outputs_single_subject(data_rois, irois, all_outputs,
                                                     targetAxes, ext, meta_data,
