@@ -304,7 +304,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
             else:
                 m_H[0] = 0
                 m_H[-1] = 0
-            logger.debug("Before: m_H = %s, hrf_covariance = %s", m_H, hrf_covariance)
+            logger.debug("After: m_H = %s, hrf_covariance = %s", m_H, hrf_covariance)
             h_norm.append(np.linalg.norm(m_H))
             # Normalizing H at each Nb2Norm iterations:
             if not constrained and NormFlag:

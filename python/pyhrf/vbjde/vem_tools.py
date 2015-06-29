@@ -381,7 +381,7 @@ def expectation_H(Y, Sigma_A, m_A, X, Gamma, PL, D, R, sigmaH, J, N, y_tilde, ze
                 m2 += 1
             m1 += 1
     Sigma_H = np.linalg.inv(Q_bar)
-    m_H = np.dot(Sigma_H, Y_bar_tilde)
+    m_H = np.dot(Sigma_H, Y_bar_tilde)  # +R*cano/sigmaH
     m_H[0] = 0
     m_H[-1] = 0
     return Sigma_H, m_H
