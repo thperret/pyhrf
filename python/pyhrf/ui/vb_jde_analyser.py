@@ -249,7 +249,7 @@ class JDEVEMAnalyser(JDEAnalyser):
                                              axes_names=["time", "voxel"],
                                              axes_domains={"time": hrf_time})
 
-            repeated_hrf_covar = np.repeat(hrf_covariance, nbv).reshape(-1, nbv)
+            repeated_hrf_covar = np.repeat(hrf_covariance[0, :], nbv).reshape(-1, nbv)
             outputs["hrf_covariance_mapped"] = xndarray(repeated_hrf_covar,
                                                         value_label="HRFs covariance",
                                                         axes_names=["time", "voxel"],
