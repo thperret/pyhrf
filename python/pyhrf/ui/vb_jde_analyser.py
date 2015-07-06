@@ -175,8 +175,8 @@ class JDEVEMAnalyser(JDEAnalyser):
         if self.fast:
             logger.info("fast VEM with drift estimation"+
                         ("and a constraint"*self.constrained))
-            (NbIter, nrls, estimated_hrf, labels, noiseVar, mu_k, sigma_k,
-             Beta, L, PL, CONTRAST, CONTRASTVAR, cA, cH, cZ, cAH, cTime,
+            (NbIter, nrls, estimated_hrf, hrf_covariance, labels, noiseVar, mu_k,
+             sigma_k, Beta, L, PL, CONTRAST, CONTRASTVAR, cA, cH, cZ, cAH, cTime,
              cTimeMean, Sigma_nrls, StimuIndSignal) = jde_vem_bold(
                  graph, data, Onsets, self.hrfDuration, self.nbClasses, TR,
                  beta, self.dt, scale, self.estimateSigmaH, self.sigmaH,
@@ -248,6 +248,12 @@ class JDEVEMAnalyser(JDEAnalyser):
             outputs["hrf_mapped"] = xndarray(repeated_hrf, value_label="HRFs",
                                              axes_names=["time", "voxel"],
                                              axes_domains={"time": hrf_time})
+
+            repeated_hrf_covar = np.repeat(hrf_covariance, nbv).reshape(-1, nbv)
+            outputs["hrf_covariance_mapped"] = xndarray(repeated_hrf_covar,
+                                                        value_label="HRFs covariance",
+                                                        axes_names=["time", "voxel"],
+                                                        axes_domains={"time": hrf_time})
 
             outputs['roi_mask'] = xndarray(np.zeros(nbv)+roiData.get_roi_id(),
                                         value_label="ROI",

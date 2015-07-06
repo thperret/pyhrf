@@ -120,6 +120,7 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
             - loop : TODO
             - m_A : TODO
             - m_H : TODO
+            - hrf_covariance : TODO
             - q_Z : TODO
             - sigma_epsilone : TODO
             - mu_M : TODO
@@ -537,6 +538,6 @@ def jde_vem_bold(graph, bold_data, onsets, hrf_duration, nb_classes, tr, beta,
     SNR /= np.log(10.)
     logger.info('SNR comp = %f', SNR)
     # ,FreeEnergyArray
-    return (loop, m_A, m_H, q_Z, sigma_epsilone, mu_M, sigma_M, Beta, drift_coeffs, drift,
+    return (loop, m_A, m_H, hrf_covariance, q_Z, sigma_epsilone, mu_M, sigma_M, Beta, drift_coeffs, drift,
             CONTRAST, CONTRASTVAR, cA[2:], cH[2:], cZ[2:], cAH[2:], compute_time[2:],
             compute_time_mean, Sigma_A, StimulusInducedSignal)
