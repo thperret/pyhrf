@@ -86,6 +86,7 @@ def maximum(iterable):
     iterable : iterable or numpy array
 
     Returns
+    -------
     tuple :
         iter_max : the maximum
         iter_max_indice : the indice of the maximum
@@ -154,6 +155,42 @@ def compute_mat_X_2(nbscans, tr, lhrf, dt, onsets, durations=None):
     x = x_tmp[os_indexes]
     return x
 
+
+def compute_mat_X_2_block(nbscans, tr, lhrf, dt, onsets, durations=None):
+    if durations is None:  # assume spiked stimuli
+        durations = np.zeros_like(onsets)
+    osf = tr / dt  # over-sampling factor
+    # construction will only work if dt is a multiple of tr
+    if int(osf) != osf:
+        raise Exception('OSF (%f) is not an integer' % osf)
+
+    x = np.zeros((nbscans, lhrf), dtype=float)
+    tmax = nbscans * tr  # total session duration
+    lgt = (nbscans + 2) * osf  # nb of scans if tr=dt
+    paradigm_bins = restarize_events(onsets, durations, dt, tmax)
+    firstcol = np.concatenate(
+        (paradigm_bins, np.zeros(lgt - len(paradigm_bins))))
+    firstrow = np.concatenate(
+        ([paradigm_bins[0]], np.zeros(lhrf - 1, dtype=int)))
+    x_tmp = np.array(toeplitz(firstcol, firstrow), dtype=int)
+    x_tmp2 = np.zeros_like(x_tmp)
+    # print x_tmp.shape
+    # print firstrow.shape
+    # print np.arange(0, firstrow.shape[0], tr / dt)
+    for ix in np.arange(0, firstrow.shape[0], tr / dt):
+        x_tmp2[:, ix] = x_tmp[:, ix]
+    os_indexes = [(np.arange(nbscans) * osf).astype(int)]
+    x = x_tmp2[os_indexes]
+    if 0:
+        import matplotlib.pyplot as plt
+        from matplotlib.pylab import *
+        plt.matshow(x_tmp[:300, :])
+        plt.show()
+        plt.matshow(x_tmp2[:300, :])
+        plt.show()
+        plt.matshow(x[:300, :])
+        plt.show()
+    return x
 
 def buildFiniteDiffMatrix(order, size, regularization=None):
     """Build the finite difference matrix used for the hrf regularization prior.
