@@ -1,11 +1,14 @@
+Changes
+=======
+
 Current development
-===================
++++++++++++++++++++
 
 - Fix VEM algorithm
 - Continue to clean setup.py
 
 Release 0.4
-===========
++++++++++++
 
 2015/03/19
 
@@ -22,5 +25,5 @@ Fixes:
 Enhancements:
 -------------
 
-No changelog for previous version
-=================================
+
+*No changelog for previous version*
