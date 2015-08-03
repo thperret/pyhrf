@@ -1,7 +1,7 @@
 *.py[cod]
 
 #pyhrf generated cfg file
-python/pyhrf/configuration.cfg
+pyhrf/configuration.cfg
 
 # C extensions
 *.so

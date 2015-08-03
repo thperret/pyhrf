@@ -61,7 +61,7 @@ setup(
     maintainer = "Thomas PERRET",
     maintainer_email = "thomas.perret@inria.fr",
     url = "http://pyhrf.org",
-    packages = find_packages("."),
+    packages = find_packages(),
     setup_requires = ["numpy>=1.0",
                       "scipy>=0.9",
                       "nibabel>=1.1",
@@ -81,8 +81,6 @@ setup(
                       "parcellation": ["munkres>=1.0"],
                       "pipelines": ["pygraphviz>=1.1"],
                       "graph": ["python-graph-core>=1.8"]},
-    package_dir = {'' : '.'},
-    # include_dirs = [np.get_include()],
     ext_modules = cExtensions,
     classifiers = [
         "Development Status :: 3 - Alpha",
