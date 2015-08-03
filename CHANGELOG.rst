@@ -1,11 +1,16 @@
-Changes
-=======
+Changelog
+=========
 
 Current development
 +++++++++++++++++++
 
 - Fix VEM algorithm
 - Continue to clean setup.py
+- Updating documentation
+    + updating theme
+    + fixing some reST and display errors
+
+-----------------------------------
 
 Release 0.4
 +++++++++++
@@ -25,5 +30,6 @@ Fixes:
 Enhancements:
 -------------
 
+-----------------------------------
 
 *No changelog for previous version*

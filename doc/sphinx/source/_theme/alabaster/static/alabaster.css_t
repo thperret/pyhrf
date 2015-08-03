@@ -85,6 +85,10 @@ div.relations {
 }
 {% endif %}
 
+div.relations {
+    overflow: hidden;
+}
+
 div.sphinxsidebar a {
     color: {{ theme_sidebar_link }};
     text-decoration: none;
@@ -362,6 +366,10 @@ table.field-list th {
     padding: 0 0.8em 0 0;
 }
 
+table.field-list tr:not(:last-child) > td {
+    padding: 0 0 20px 0;
+}
+
 table.field-list td {
     padding: 0;
 }
@@ -382,6 +390,12 @@ dl {
 
 dl dd {
     margin-left: 30px;
+}
+
+dl.function,dl.method,dl.class,dl.attribute > dt {
+    padding-left: 20px;
+    text-indent: -20px;
+    text-align: left;
 }
 
 blockquote {
