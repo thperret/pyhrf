@@ -21,7 +21,7 @@ addons:
             - libpng-dev
 
 before_install:
-    - pip install --no-index -f http://wheels2.astropy.org --trusted-host http://wheels2.astropy.org -f https://nipy.bic.berkeley.edu/scipy_installers/travis --trusted-host https://nipy.bic.berkeley.edu/scipy_installers/travis scipy "matplotlib<1.4";
+    - pip install --no-index -f https://nipy.bic.berkeley.edu/scipy_installers/travis --trusted-host https://nipy.bic.berkeley.edu/scipy_installers/travis scipy "matplotlib<1.4";
     - pip install nibabel
     - pip install sympy
     - pip install nipy
