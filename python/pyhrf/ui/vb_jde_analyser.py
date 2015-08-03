@@ -94,7 +94,7 @@ class JDEVEMAnalyser(JDEAnalyser):
 
     def __init__(self, hrfDuration=25., sigmaH=0.1, fast=True,
                  computeContrast=True, nbClasses=2, PLOT=False, nItMax=100,
-                 nItMin=1, scale=False, beta=1.0, estimateSigmaH=True,
+                 nItMin=5, scale=False, beta=1.0, estimateSigmaH=True,
                  estimateHRF=True, TrueHrfFlag=False,HrfFilename='hrf.nii',
                  estimateDrifts=True, hyper_prior_sigma_H=1000, dt=.6,
                  estimateBeta=True, contrasts=None, simulation=False,
