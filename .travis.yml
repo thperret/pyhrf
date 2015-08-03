@@ -33,10 +33,10 @@ before_install:
     - pip install coveralls
 
 install:
-    - pip install .
+    - pip install -e .
 
 script:
-    - sh -c 'cd ..' && nosetests --with-doctest --with-coverage --cover-package=pyhrf -v -s pyhrf
+    - nosetests --with-doctest --with-coverage --cover-package=pyhrf -v -s pyhrf
 
 after_success:
     - coveralls
