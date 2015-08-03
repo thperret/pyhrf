@@ -85,7 +85,7 @@ def get_tmp_path(tag='pyhrf_'):
 
 def get_src_path():
     """Return the source path of pyhrf."""
-    return os.path.join(os.path.dirname(pyhrf.__file__), '../../')
+    return os.path.join(os.path.dirname(pyhrf.__file__), '../')
 
 
 def get_src_doc_path():

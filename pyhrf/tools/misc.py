@@ -141,7 +141,7 @@ def add_prefix(fn, prefix):
 
 def assert_path_not_in_src(p):
     p = op.realpath(p)
-    src_path = op.realpath(op.join(op.dirname(pyhrf.__file__), '../../'))
+    src_path = op.realpath(op.join(op.dirname(pyhrf.__file__), '../'))
     for root, _, _ in os.walk(src_path):
         if root == p:
             raise Exception('Directory %s is in source path' % p)

@@ -263,7 +263,7 @@ if pyhrf.cfg['global']['spm_path'] is not None:
             bold_files.append(f)
         bold_files = ';'.join(bold_files)
 
-        script_path = op.join(op.dirname(pyhrf.__file__), '../../script/SPM')
+        script_path = op.join(op.dirname(pyhrf.__file__), '../script/SPM')
         spm_path = pyhrf.cfg['global']['spm_path']
         matlab_code = "cd %s;paradigm_file='%s';TR=%f;mask_file='%s';" \
             "bold_files='%s';output_path='%s';" \
