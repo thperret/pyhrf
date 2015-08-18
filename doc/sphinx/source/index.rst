@@ -39,6 +39,7 @@ Site content:
        manual.rst
        autodoc/pyhrf.rst
        changelog.rst
+       development.rst
 
 ..       
     Indices and tables
