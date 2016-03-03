@@ -2318,9 +2318,9 @@ class BOLDSampler_MultiSujInput:
 
     def buildParadigmConvolMatrix(self, zc, estimDuration, availableDataIndex,
                                   parData):
-        osf = self.tr / self.dt
+        osf = int(self.tr / self.dt)
 
-        logger.info('osf = %1.2f', osf)
+        logger.info('osf = %d', osf)
         logger.debug('availableDataIndex :')
         logger.debug(availableDataIndex)
 

@@ -144,23 +144,3 @@ class GraphTest(unittest.TestCase):
         for i, mcc in enumerate(split_mask_into_cc_iter(mask, kerMask=km)):
             pass
         assert i == 1  # 2 rois
-
-    def test_pyhrf_extract_cc_vol(self):
-        test_mask = np.array([[[1, 1, 0, 1, 1],
-                               [1, 1, 0, 1, 1],
-                               [0, 0, 0, 0, 0],
-                               [1, 0, 1, 1, 0],
-                               [0, 0, 1, 1, 0]],
-                              [[1, 1, 0, 1, 1],
-                               [1, 1, 0, 1, 1],
-                               [0, 0, 0, 0, 0],
-                               [0, 0, 1, 1, 0],
-                               [0, 0, 1, 1, 0]]],
-                             dtype=int)
-        mask_file = op.join(self.tmp_dir, 'test_mask.nii')
-        write_volume(test_mask, mask_file)
-
-        cmd = 'pyhrf_extract_cc_vol -v0 -m 2 %s' % mask_file
-        if os.system(cmd) != 0:
-            raise Exception('Command %s failed' % cmd)
-        assert len(os.listdir(self.tmp_dir)) == 4

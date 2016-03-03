@@ -203,6 +203,8 @@ def compute_mat_X_2(nbscans, tr, lhrf, dt, onsets, durations=None):
     # construction will only work if dt is a multiple of tr
     if int(osf) != osf:
         raise Exception('OSF (%f) is not an integer' % osf)
+    else:
+        osf = int(osf)
 
     x = np.zeros((nbscans, lhrf), dtype=float)
     tmax = nbscans * tr  # total session duration

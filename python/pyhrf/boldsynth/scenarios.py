@@ -348,11 +348,11 @@ def create_null_drift(bold_shape):
 
 
 def get_bold_shape(stim_induced_signal, dsf):
-    return stim_induced_signal[0:-1:dsf, :].shape
+    return stim_induced_signal[0:-1:int(dsf), :].shape
 
 
 def calc_asl_shape(bold_stim_induced, dsf):
-    return bold_stim_induced[0:-1:dsf, :].shape
+    return bold_stim_induced[0:-1:int(dsf), :].shape
 
 
 def load_hrf_territories(nb_hrf_territories=0, hrf_territories_name=None):
@@ -795,6 +795,7 @@ def create_asl_from_stim_induced(bold_stim_induced, perf_stim_induced,
     add noise and drift (nuisance signals) which has to be at downsampled
     temporal resolution.
     """
+    dsf = int(dsf)
     bold = bold_stim_induced[0:-1:dsf, :].copy()
     perf = np.dot(ctrl_tag_mat, (perf_stim_induced[0:-1:dsf, :].copy() +
                                  perf_baseline))
@@ -952,7 +953,7 @@ def simulation_save_vol_outputs(simulation, output_dir, bold_3D_vols_dir=None,
 
         dsf = simulation['dsf']
         perf = np.dot(simulation['ctrl_tag_mat'],
-                      simulation['perf_stim_induced'][0:-1:dsf])
+                      simulation['perf_stim_induced'][0:-1:int(dsf)])
         stim_induced_vol = expand_array_in_mask(perf, mask_vol, flat_axis=1)
         write_volume(np.rollaxis(stim_induced_vol, 0, 4), fn_stim_induced)
 

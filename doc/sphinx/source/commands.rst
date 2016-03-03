@@ -13,12 +13,6 @@ pyhrf_jde_buildcfg
 pyhrf_jde_estim
 ---------------
 
-pyhrf_glm_buildcfg
-------------------
-
-pyhrf_glm_estim
----------------
-
 pyhrf_rfir_buildcfg
 -------------------
 

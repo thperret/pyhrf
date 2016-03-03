@@ -260,7 +260,7 @@ class ResponseSampler(GibbsSamplerVariable):
             self.error = np.concatenate(([0], self.error, [0]))
 
             if self.name == 'prf':
-                hrf_length = self.currentValue.shape[0] + 2.
+                hrf_length = self.currentValue.shape[0] + 2
                 from pyhrf.sandbox.physio import PHY_PARAMS_FRISTON00 as phy_params
                 from pyhrf.sandbox.physio import linear_rf_operator
                 self.omega_operator = linear_rf_operator(hrf_length, phy_params, self.dt,
@@ -281,7 +281,7 @@ class ResponseSampler(GibbsSamplerVariable):
         else:
             self.finalValue = fv
             if self.name == 'prf':
-                hrf_length = self.currentValue.shape[0] + 6.
+                hrf_length = self.currentValue.shape[0] + 6
                 from pyhrf.sandbox.physio import PHY_PARAMS_FRISTON00 as phy_params
                 from pyhrf.sandbox.physio import linear_rf_operator
                 self.omega_operator = linear_rf_operator(hrf_length, phy_params, self.dt,
